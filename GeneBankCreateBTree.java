@@ -26,7 +26,7 @@ private static void printUsage() {
           File fi = new File(fileName);
           Scanner scan = new Scanner(fi);
           //Instead of going through until I find ORIGIN, set the delimiter to a regex that splits by trash
-          scan.useDelimiter("(?s)(?:(?:\\/\\/|\\A).*?ORIGIN|\\/\\/. *(?!ORIGIN))");
+          scan.useDelimiter("(?s)(?:(?:\\/\\/|\\A).*?ORIGIN|\\/\\/.*(?!ORIGIN))");
           String buff = "";
           //Filter out any whitespace and numbers, then put it all in a buffer
           while(scan.hasNext()) {
