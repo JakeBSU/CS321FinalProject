@@ -1,57 +1,69 @@
-class TreeObject {
-    private int frequency;
+public class TreeObject {
+
+    private int freq;
     private long key;
 
-    public TreeObject(long data){
-        this.key = data;
-        this.frequency = 1;
-    }
-
     /**
+     * Constructor for the BTree object.
      *
+     * @param key  - the key of the object.
+     * @param freq - the frequency of the object.
      */
-    public void increaseFrequency(){
-        this.frequency++;
+
+    public TreeObject(long key, int freq) {
+        this.key = key;
+        this.freq = freq;
     }
 
     /**
+     * Constructor for the BTree object.
+     *
+     * @param key - the key of the object.
+     */
+
+    public TreeObject(long key) {
+        this.key = key;
+        this.freq = 1;
+    }
+
+    /**
+     * Returns the key of the BTree object.
      *
      * @return
      */
-    public int getFrequency(){
-        return this.frequency;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getKey(){
+    public Long getKey() {
         return this.key;
     }
 
     /**
+     * Returns the frequency of the BTree object.
      *
-     * @param frequency
+     * @return
      */
-    public void setFrequency(int frequency){
-        this.frequency = frequency;
+    public int getFreq() {
+        return this.freq;
     }
 
-    @Override
-    public int compareTo(TreeObject o) {
-        if(this.key > o.getKey()){
-            return 1;
-        }else if(this.key < o.getKey()){
+    /**
+     * Increments the frequency of the BTree object.
+     */
+    public void increaseFreq() {
+        freq++;
+    }
+
+    /**
+     * Compares one key to another.
+     *
+     * @param obj
+     * @return
+     */
+    public int compareTo(TreeObject obj) {
+        if (key < obj.key)
             return -1;
-        }else{
+        if (key > obj.key)
+            return 1;
+        else
             return 0;
-        }
     }
 
-    public String toString(){
-        return "Key value: " + key + "\tFrequency: " + frequency;
-    }
-
-}
 }
