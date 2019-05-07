@@ -11,12 +11,9 @@ public static void main(String[] args) throws IOException {
     printUsage();
     return;
   }
-  Long[] keys = Parse(args[1],Integer.parseInt(args[2]));
   //When everything is all set up, this thrhows all the keys into the tree
   BTree tree = new BTree(Integer.parseInt(args[0]), args[1]+".btree.data."+args[2]+"."+args[0], Integer.parseInt(args[2]));
-  for(Long key : keys) {
-    tree.insert(key);
-  }
+  Parse(args[1],Integer.parseInt(args[2]),tree);
 }
 private static void printUsage() {
         System.err.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debuglevel>]");
@@ -26,39 +23,36 @@ private static void printUsage() {
         System.err.println("[<debug level>]: 0/1 (no/yes)");
         System.exit(1);
     }
-    private static Long[] Parse(String fileName, int length) throws FileNotFoundException {
+    private static void Parse(String fileName, int length, BTree destination) throws FileNotFoundException {
           //Open file in a scanner
+          int total = 0;
+          int lineNo = 1;
           File fi = new File(fileName);
           Scanner scan = new Scanner(fi);
-          //Instead of going through until I find ORIGIN, set the delimiter to a regex that splits by trash
-          scan.useDelimiter("(?s)(?:(?:\\/\\/|\\A).*?ORIGIN|\\/\\/.*(?!ORIGIN))");
-          String buff = "";
-          //Filter out any whitespace and numbers, then put it all in a buffer
-          while(scan.hasNext()) {
-            buff += scan.next().replaceAll("[\\s0-9]*","");
-          }
-          //Instead of looping through I created a regular expression that finds all possible
-          //overlapped combinations of X number of actg characters. This is a regular expression
-          //so anything that is not actg is automatically glanced over
+          boolean toggle = false;
           Pattern p = Pattern.compile("(?i)(?=([actg]{"+length+"}))");
-          Matcher m = p.matcher(buff);
-          // //Thing I found on stack overflow to get the total number of matches so I can create an array.
-          // //Not sure if I will need an array later, but I have it now
-          int total = m.replaceAll("\0").split("\0", -1).length - 1;
-          System.out.println(total+" total matches found. Now converting to array");
-          // //The total thing messed with m, so I reset it
-          m = p.matcher(buff);
-          Long[] subs = new Long[total];
-          int i=0;
-          //Continue to find matches and shove them into the array
-          while(m.find()) {
-            subs[i] = toLong(m.group(1));
-            if(i==0)System.out.println("Code: "+m.group(1)+" long: "+Long.toBinaryString(subs[0]));
-            i++;
+          while(scan.hasNextLine()) {
+            lineNo++;
+            String line = scan.nextLine().trim();
+            if(!toggle) {
+              if(line.equals("ORIGIN")) {
+                toggle = true;
+              }
+          } else {
+            if(line.equals("//")) {
+              toggle = false;
+              continue;
+            }
+            line = line.replaceAll("[\\s0-9]*","");
+            Matcher m = p.matcher(line);
+            while(m.find()) {
+              total++;
+            destination.insert(toLong(m.group(1)));
           }
-          System.out.println("Done");
+          }
 
-          return subs;
+          }
+          System.out.println(total+" total matches.");
     }
     private static Long toLong(String code) {
       String s = code.toLowerCase();

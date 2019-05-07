@@ -402,7 +402,7 @@ public class BTree {
 
 }
 
-public class BTreeNode implements Comparable<BTreeNode> {
+class BTreeNode implements Comparable<BTreeNode> {
 
     LinkedList<TreeObject> keys;
     LinkedList<Integer> child;
