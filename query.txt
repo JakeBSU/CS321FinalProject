@@ -3,6 +3,8 @@ ctga
 cccc
 ctga
 acac
+aaaa
+tttt
 ac
 a
 nnnnn
