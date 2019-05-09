@@ -14,6 +14,7 @@ public static void main(String[] args) throws IOException {
   //When everything is all set up, this thrhows all the keys into the tree
   BTree tree = new BTree(Integer.parseInt(args[0]), args[1]+".btree.data."+args[2]+"."+args[0], Integer.parseInt(args[2]));
   Parse(args[1],Integer.parseInt(args[2]),tree);
+  tree.writeTreeData();
 }
 private static void printUsage() {
         System.err.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debuglevel>]");
@@ -45,6 +46,7 @@ private static void printUsage() {
             }
             line = line.replaceAll("[\\s0-9]*","");
             Matcher m = p.matcher(line);
+
             while(m.find()) {
               total++;
             destination.insert(toLong(m.group(1)));
