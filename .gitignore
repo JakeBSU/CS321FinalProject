@@ -1,3 +1,12 @@
 
 *.iml
 *.xml
+/BTree.class
+/BTreeNode.class
+/GeneBankCreateBTree.class
+/GeneBankSearch.class
+/TreeObject.class
+/parser.class
+/Parser.class
+.project
+.classpath
