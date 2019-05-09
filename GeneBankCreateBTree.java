@@ -45,20 +45,21 @@ public class GeneBankCreateBTree {
 			System.exit(-1);
 		}
 		if (!debug || debugLevel == 0) {
-			Parser parse = new Parser(file, seqLength);
 			BTree tree = new BTree(degree, fileDataName, seqLength);
-			while (parse.hasNext()) {
-				Long seq = parse.nextSubSeq();
-				tree.insert(seq);
-			}
+      try {
+        Parse(args[2],seqLength,tree);
+        tree.writeTreeData();
+      } catch(FileNotFoundException e) {
+        e.printStackTrace();
+      }
 		} else if (debugLevel == 1) {
-			Parser parse = new Parser(file, seqLength);
 			BTree tree = new BTree(degree, fileDataName, seqLength);
-
-			while (parse.hasNext()) {
-				Long seq = parse.nextSubSeq();
-				tree.insert(seq);
-			}
+      try {
+        Parse(args[2],seqLength,tree);
+        tree.writeTreeData();
+      } catch(FileNotFoundException e) {
+        e.printStackTrace();
+      }
 			PrintStream dumpFile = null;
 			try {
 				String str = file + ".btree.dump." + seqLength;
@@ -79,7 +80,8 @@ public class GeneBankCreateBTree {
   //tree.writeTreeData();
 
 private static void printUsage() {
-        System.err.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debuglevel>]");
+        System.err.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> [<debuglevel>]");
+        System.err.println("<cache>: use  (0 for default)");
         System.err.println("<degree>: degree of the BTree (0 for default)");
         System.err.println("<gbk file>: GeneBank file");
         System.err.println("<sequence length>: 1-31");
@@ -94,6 +96,7 @@ private static void printUsage() {
           Scanner scan = new Scanner(fi);
           boolean toggle = false;
           Pattern p = Pattern.compile("(?i)(?=([actg]{"+length+"}))");
+          int a = 0;
           while(scan.hasNextLine()) {
             lineNo++;
             String line = scan.nextLine().trim();
@@ -110,12 +113,17 @@ private static void printUsage() {
             Matcher m = p.matcher(line);
 
             while(m.find()) {
+              if(m.group(1).equals("aaaa")) {
+                a++;
+                System.out.println("Adding one more aaaa ("+a+")");
+              }
               total++;
             destination.insert(toLong(m.group(1)));
           }
           }
 
           }
+          System.out.println(a+" total aaaa.");
           System.out.println(total+" total matches.");
     }
     private static Long toLong(String code) {
