@@ -27,7 +27,7 @@ public class BTree {
         this.degree = degree;
         this.seqLength = seqLength;
         nodeSize = (32 * degree - 3);
-        currentOffset = 12;
+        currentOffset = 16;
         insertPoint = (currentOffset + nodeSize);
         BTreeNode temp = new BTreeNode();
         root = temp;
@@ -327,9 +327,10 @@ public class BTree {
     public void writeTreeData() {
         try {
             disk.seek(0);
+            disk.writeInt(seqLength);
             disk.writeInt(degree);
             disk.writeInt(32 * degree - 3);
-            disk.writeInt(12);
+            disk.writeInt(16);
         } catch (IOException ioe) {
             System.err.println("IO Exception occurred!");
             System.exit(-1);
