@@ -1,17 +1,78 @@
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class GeneBankCreateBTree {
-public static void main(String[] args) throws IOException {
-  if(args.length != 4 || Integer.parseInt(args[2]) < 1 || Integer.parseInt(args[2]) > 31) {
-    printUsage();
-    return;
-  }
-  //When everything is all set up, this thrhows all the keys into the tree
+	private static int cacheSelect, degree, seqLength, debugLevel = 0;
+	private static String file, fileDataName;
+	private static boolean debug = false;
+	public static void main(String[] args) {
+		try {
+			if (args.length < 3 || args.length > 5) {
+				printUsage();
+				System.exit(-1);
+			}
+			if (args.length == 5) {
+				debug = true;
+				debugLevel = Integer.parseInt(args[4]);
+			}
+			cacheSelect = Integer.parseInt(args[0]);
+			if (!(cacheSelect == 0 || cacheSelect == 1)) {
+				printUsage();
+				System.exit(-1);
+			}
+			degree = Integer.parseInt(args[1]);
+				if (degree == 0)
+				{
+					degree = 15; //optimal degree
+				}
+			file = args[2];
+			seqLength = Integer.parseInt(args[3]);
+			fileDataName = file + ".btree.data." + seqLength + "." + degree;
+			if (seqLength > 31 || seqLength < 1) {
+				System.err.println("Sequence Size must be between 1 and 31 inclusive.");
+				printUsage();
+				System.exit(-1);
+			}
+		} catch (Exception e) {
+			printUsage();
+			System.exit(-1);
+		}
+		if (!debug || debugLevel == 0) {
+			Parser parse = new Parser(file, seqLength);
+			BTree tree = new BTree(degree, fileDataName, seqLength);
+			while (parse.hasNext()) {
+				Long seq = parse.nextSubSeq();
+				tree.insert(seq);
+			}
+		} else if (debugLevel == 1) {
+			Parser parse = new Parser(file, seqLength);
+			BTree tree = new BTree(degree, fileDataName, seqLength);
+
+			while (parse.hasNext()) {
+				Long seq = parse.nextSubSeq();
+				tree.insert(seq);
+			}
+			PrintStream dumpFile = null;
+			try {
+				String str = file + ".btree.dump." + seqLength;
+				dumpFile = new PrintStream(new FileOutputStream(str));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			System.setOut(dumpFile);
+			tree.inOrderPrint(tree.getRoot());
+			System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+		}
+
+	}
+  //When everything is all set up, this throws all the keys into the tree
   BTree tree = new BTree(Integer.parseInt(args[0]), args[1]+".btree.data."+args[2]+"."+args[0], Integer.parseInt(args[2]));
   Parse(args[1],Integer.parseInt(args[2]),tree);
 }
