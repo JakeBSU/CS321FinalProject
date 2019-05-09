@@ -6,6 +6,11 @@ import java.util.Scanner;
 import java.util.LinkedList;
 
 public class GeneBankSearch {
+  private static int seqLength;
+  private static int degree;
+  private static int nodeSize;
+  private static int offset;
+  private static BTreeNode root;
 public static void main(String[] args) {
   if(args.length != 2 && args.length != 3) {
     printUsage();
@@ -20,30 +25,28 @@ public static void main(String[] args) {
 
     RandomAccessFile nodeReader = new RandomAccessFile(treeFile, "r");
     nodeReader.seek(0);
-    int degree = nodeReader.readInt();
-    int nodeSize = nodeReader.readInt();
-    int offset = nodeReader.readInt();
-    BTreeNode root = readNode(nodeReader, 12);
-    int subLength = 0;
+    seqLength = nodeReader.readInt();
+    degree = nodeReader.readInt();
+    nodeSize = nodeReader.readInt();
+    offset = nodeReader.readInt();
+    root = readNode(nodeReader, 16);
     //This pretty much just tokenizes the file
     scan.useDelimiter("(?m)(?=^[actg]+$)");
     while(scan.hasNext()) {
       String base = scan.next();
-      base = base.replaceAll("\\s","");
-      if(subLength == 0) subLength = base.length();
-      if(base.length() == subLength) {
+        base = base.replaceAll("\\s","");
+        if(base.length() != seqLength) continue;
         //Since the sequence only contains one side, we really need to search for two.
         Long init = toLong(base);
         TreeObject n = search(nodeReader, root,init);
         int total = 0;
         if(n != null) total = n.getFreq();
-        Long alt = init ^ ~(~0<<(2*subLength));
+        Long alt = init ^ ~(~0<<(2*seqLength));
         n = search(nodeReader, root,alt);
         if(n != null) total += n.getFreq();
         System.out.println(base+": "+total);
         //Now somehow the tree file needs to be searched for both of these keys.
         //The frequency should be the frequency of both of them added, since they imply eachother
-      }
     }
   } catch(FileNotFoundException e) {
     System.err.println("File not found");
@@ -78,7 +81,6 @@ private static String toGene(Long code, int length) {
   return s;
 }
 public static BTreeNode readNode(RandomAccessFile disk, int off) {
-  int degree = 5;
     BTreeNode n = null;
 
     n = new BTreeNode();
