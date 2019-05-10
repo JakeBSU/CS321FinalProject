@@ -120,7 +120,6 @@ private static void printUsage() {
           }
 
           }
-          System.out.println(a+" total aaaa.");
           System.out.println(total+" total matches.");
     }
     private static Long toLong(String code) {
