@@ -96,6 +96,7 @@ public class BTree {
             }
             if (i > 0 && object.compareTo(start.getKey(i - 1)) == 0) {
                 start.getKey(i - 1).increaseFreq();
+                writeNode(start,start.getOffset());
             } else {
                 BTreeNode n = new BTreeNode();
                 n.setOffset(start.getOffset());
@@ -153,6 +154,7 @@ public class BTree {
                 }
                 if (j > 0 && object.compareTo(c.getKey(j - 1)) == 0) {
                     c.getKey(j - 1).increaseFreq();
+                    writeNode(c, c.getOffset());
                     return;
                 } else {
                     splitChild(start, i, c);

@@ -114,6 +114,7 @@ private static void printUsage() {
             Matcher m = p.matcher(prevChars+line);
             while(m.find()) {
               total++;
+
             destination.insert(toLong(m.group(1)));
           }
 					prevChars = line.substring(line.length() - length + 1,line.length());
