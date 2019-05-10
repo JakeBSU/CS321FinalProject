@@ -62,7 +62,7 @@ public class GeneBankCreateBTree {
       }
 			PrintStream dumpFile = null;
 			try {
-				String str = file + ".btree.dump." + seqLength;
+				String str = file + ".btree.dump." + seqLength + "." + degree;
 				dumpFile = new PrintStream(new FileOutputStream(str));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -133,7 +133,7 @@ private static void printUsage() {
       s = s.replaceAll("c","01");
       s = s.replaceAll("g","10");
       Long m = 1l;
-      m = m<<63; //One with 63 zeroes after it, so we can always have 64 bitts
+      m = m<<63; //One with 63 zeroes after it, so we can always have 64 bits
       return (Long.parseLong(s,2) | m); //Mask it so if we ever wanted to see the full binary value we can
     }
 }
