@@ -62,7 +62,7 @@ public class GeneBankCreateBTree {
       }
 			PrintStream dumpFile = null;
 			try {
-				String str = file + ".btree.dump." + seqLength + "." + degree;
+				String str = "dump";
 				dumpFile = new PrintStream(new FileOutputStream(str));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
