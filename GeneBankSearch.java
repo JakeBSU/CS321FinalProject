@@ -65,7 +65,7 @@ private static Long toLong(String code) {
   s = s.replaceAll("c","01");
   s = s.replaceAll("g","10");
   Long m = 1l;
-  m = m<<63; //One with 63 zeroes after it, so we can always have 64 bitts
+  m = m<<63; //One with 63 zeroes after it, so we can always have 64 bits
   return (Long.parseLong(s,2) | m); //Mask it so if we ever wanted to see the full binary value we can
 }
 private static String toGene(Long code, int length) {
@@ -76,7 +76,7 @@ private static String toGene(Long code, int length) {
   s = s.replaceAll("3","t");
   s = s.substring(32-length,32);
   // Long m = 1l;
-  // m = m<<63; //One with 63 zeroes after it, so we can always have 64 bitts
+  // m = m<<63; //One with 63 zeroes after it, so we can always have 64 bits
   // return (Long.parseLong(s,2) | m); //Mask it so if we ever wanted to see the full binary value we can
   return s;
 }
