@@ -96,7 +96,7 @@ private static void printUsage() {
           Scanner scan = new Scanner(fi);
           boolean toggle = false;
           Pattern p = Pattern.compile("(?i)(?=([actg]{"+length+"}))");
-          int a = 0;
+					String prevChars = "";
           while(scan.hasNextLine()) {
             lineNo++;
             String line = scan.nextLine().trim();
@@ -110,16 +110,13 @@ private static void printUsage() {
               continue;
             }
             line = line.replaceAll("[\\s0-9]*","");
-            Matcher m = p.matcher(line);
-
+						//prevChars is the previous length-1 bits from the last line, it allows for line wrapping
+            Matcher m = p.matcher(prevChars+line);
             while(m.find()) {
-              if(m.group(1).equals("aaaa")) {
-                a++;
-                System.out.println("Adding one more aaaa ("+a+")");
-              }
               total++;
             destination.insert(toLong(m.group(1)));
           }
+					prevChars = line.substring(line.length() - length + 1,line.length());
           }
 
           }
