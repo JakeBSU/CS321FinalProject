@@ -605,4 +605,10 @@ class BTreeNode implements Comparable<BTreeNode> {
         return offset - o.offset;
     }
 
+    @Override
+    public boolean equals(BTreeNode o) {
+        return ((offset - o.offset)==0);
+    }
+    
+    
 }
