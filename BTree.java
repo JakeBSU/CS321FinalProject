@@ -262,7 +262,7 @@ public class BTree {
                 ret += "g";
             }
         }
-        return ret;
+        return ret.substring(32-seqLength,32);
     }
 
     /**
