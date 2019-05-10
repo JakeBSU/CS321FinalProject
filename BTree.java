@@ -273,7 +273,7 @@ public class BTree {
     public void inOrderPrint(BTreeNode node) {
         if (node.isLeaf() == true) {
             for (int i = 0; i < node.getNumKeys(); i++) {
-                System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
+                System.out.println(node.getKey(i).getFreq() + " " + convertToDNA(node.getKey(i).getKey()));
             }
             return;
         }
@@ -282,7 +282,7 @@ public class BTree {
             BTreeNode y = readNode(offset);
             inOrderPrint(y);
             if (i < node.getNumKeys())
-                System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
+            	System.out.println(node.getKey(i).getFreq() + " " + convertToDNA(node.getKey(i).getKey()));
 
         }
 
